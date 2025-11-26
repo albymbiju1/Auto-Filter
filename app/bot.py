@@ -28,13 +28,17 @@ class MovieBazarBot(Client):
 
     def __init__(self):
         """Initialize the bot with configuration"""
+        import os
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        plugins_path = os.path.join(base_dir, "handlers")
+
         super().__init__(
             "cineai_bot",
             api_id=config.telegram.API_ID,
             api_hash=config.telegram.API_HASH,
             bot_token=config.telegram.BOT_TOKEN,
             in_memory=True,
-            plugins={"root": "handlers", "exclude": ["__pycache__", "*.pyc", "__pycache__"]}
+            plugins=dict(root=plugins_path)
         )
 
         # Bot state
