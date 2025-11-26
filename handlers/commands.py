@@ -222,7 +222,7 @@ async def help_command(client: Client, message: Message):
     user_id = message.from_user.id
 
     try:
-        help_text = build_help_text()
+        help_text = await build_help_text(client)
 
         # Build keyboard based on available features
         keyboard_buttons = []
@@ -294,7 +294,7 @@ async def help_command(client: Client, message: Message):
         await message.reply_text("❌ Error loading help. Please try again later.")
 
 
-def build_help_text() -> str:
+async def build_help_text(client: Client) -> str:
     """Build help text based on enabled features"""
     help_text = "🎬 **CineAI Bot Help**\n\n"
 
