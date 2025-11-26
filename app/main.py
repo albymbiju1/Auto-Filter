@@ -83,12 +83,20 @@ class BotManager:
 
             # Import handlers BEFORE starting the bot so they can register
             logger.info("Loading handlers...")
+            import handlers.debug_all_messages  # Load debug handler first
             import handlers.start
             import handlers.commands
             import handlers.inline
             import handlers.channel_listener
             import handlers.test
             logger.info("Handlers loaded successfully")
+
+            # Log handler count
+            if hasattr(movie_bazar_bot, 'dispatcher'):
+                handler_count = sum(len(handlers) for handlers in movie_bazar_bot.dispatcher.groups.values())
+                logger.info(f"Total handlers registered: {handler_count}")
+            else:
+                logger.warning("Dispatcher not found on bot instance!")
 
             # Start the bot
             me = await movie_bazar_bot.start()
