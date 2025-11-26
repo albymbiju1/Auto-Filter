@@ -12,6 +12,7 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.enums import ParseMode
 
 from app.config import config
+from app.bot import bot
 from services.spellcheck_service import SpellCheckService
 
 logger = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 spell_check = SpellCheckService() if config.features.SPELL_CHECK else None
 
 
-@Client.on_message(filters.command("search") & filters.private)
+@bot.on_message(filters.command("search") & filters.private)
 async def search_command(client: Client, message: Message):
     """Handle /search command"""
     user_id = message.from_user.id
@@ -216,7 +217,7 @@ async def send_search_results(client: Client, message: Message, result, query: s
         raise
 
 
-@Client.on_message(filters.command("help") & filters.private)
+@bot.on_message(filters.command("help") & filters.private)
 async def help_command(client: Client, message: Message):
     """Handle /help command"""
     user_id = message.from_user.id
@@ -383,7 +384,7 @@ async def build_help_text(client: Client) -> str:
     return help_text
 
 
-@Client.on_message(filters.command("stats") & filters.private)
+@bot.on_message(filters.command("stats") & filters.private)
 async def stats_command(client: Client, message: Message):
     """Handle /stats command"""
     user_id = message.from_user.id
@@ -451,7 +452,7 @@ async def stats_command(client: Client, message: Message):
         await message.reply_text("❌ Error loading statistics. Please try again later.")
 
 
-@Client.on_message(filters.command("profile") & filters.private)
+@bot.on_message(filters.command("profile") & filters.private)
 async def profile_command(client: Client, message: Message):
     """Handle /profile command"""
     user_id = message.from_user.id
@@ -535,7 +536,7 @@ def get_quality_emoji(quality) -> str:
 
 
 # Callback handlers
-@Client.on_callback_query(filters.regex("^search_page_(.+?)_(\\d+)$"))
+@bot.on_callback_query(filters.regex("^search_page_(.+?)_(\\d+)$"))
 async def search_page_callback(client: Client, callback_query):
     """Handle search pagination"""
     user_id = callback_query.from_user.id
@@ -565,7 +566,7 @@ async def search_page_callback(client: Client, callback_query):
         await callback_query.answer("❌ Error occurred. Please try again.", show_alert=True)
 
 
-@Client.on_callback_query(filters.regex("^new_search$"))
+@bot.on_callback_query(filters.regex("^new_search$"))
 async def new_search_callback(client: Client, callback_query):
     """Handle new search callback"""
     try:

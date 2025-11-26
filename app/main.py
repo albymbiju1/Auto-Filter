@@ -20,6 +20,14 @@ from pyrogram.enums import ParseMode
 logger = setup_logging()
 logger.info("Starting Movie Bazar Bot...")
 
+# Import handlers to register them with the bot
+import handlers.start
+import handlers.commands
+import handlers.inline
+import handlers.channel_listener
+import handlers.test
+logger.info("Handlers imported and registered")
+
 
 class BotManager:
     """Manages bot lifecycle and services"""

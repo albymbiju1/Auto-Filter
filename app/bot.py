@@ -33,8 +33,8 @@ class MovieBazarBot(Client):
             api_id=config.telegram.API_ID,
             api_hash=config.telegram.API_HASH,
             bot_token=config.telegram.BOT_TOKEN,
-            in_memory=True,
-            plugins=dict(root="handlers")
+            in_memory=True
+            # Removed plugins parameter - will register handlers manually
         )
 
         # Bot state

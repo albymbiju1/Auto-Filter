@@ -24,6 +24,7 @@ from pyrogram.types import (
 from pyrogram.enums import ParseMode
 
 from app.config import config
+from app.bot import bot
 from services.spellcheck_service import SpellCheckService
 from utils.media_utils import format_file_size, get_quality_emoji
 
@@ -33,7 +34,7 @@ logger = logging.getLogger(__name__)
 spell_check = SpellCheckService() if config.features.SPELL_CHECK else None
 
 
-@Client.on_inline_query()
+@bot.on_inline_query()
 async def inline_query_handler(client: Client, inline_query: InlineQuery):
     """Handle inline search queries"""
     user_id = inline_query.from_user.id

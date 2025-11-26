@@ -13,6 +13,7 @@ from pyrogram.types import Message, Video, Document, Photo, Audio
 from pyrogram.enums import ChatType, ParseMode
 
 from app.config import config
+from app.bot import bot
 from utils.media_utils import (
     extract_year_from_title,
     extract_season_episode,
@@ -30,7 +31,7 @@ logger = logging.getLogger(__name__)
 imdb_service = IMDBService() if config.features.IMDB_INTEGRATION else None
 
 
-@Client.on_message(
+@bot.on_message(
     filters.group &
     ~filters.private &
     ~filters.bot &
