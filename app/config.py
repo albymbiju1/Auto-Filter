@@ -110,7 +110,7 @@ class Config(BaseSettings):
     SUPER_ADMIN_ID: Optional[int] = None
 
     # Database Configuration
-    MONGO_URI: str = "mongodb://localhost:27017/cineai_bot"
+    MONGO_URI: str
     PRIMARY_DB: str = "mongo"
     REDIS_URL: Optional[str] = None
 
@@ -143,8 +143,9 @@ class Config(BaseSettings):
 
     model_config = {
         "env_file": ".env",
+        "env_file_encoding": "utf-8",
         "case_sensitive": True,
-        "extra": "forbid"
+        "extra": "ignore"  # Changed from "forbid" to "ignore" for cloud deployments
     }
 
     @field_validator("API_ID", mode="before")
