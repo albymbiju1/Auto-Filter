@@ -11,7 +11,7 @@ services:
       - API_HASH=${API_HASH}
 
       # Database Configuration
-      - MONGO_URI=mongodb://mongo:27017/cineai_bot
+      - MONGO_URI=${MONGO_URI}
 
       # Admin Configuration
       - ADMIN_USER_IDS=${ADMIN_USER_IDS}
