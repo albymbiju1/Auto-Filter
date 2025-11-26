@@ -144,8 +144,10 @@ class Config(BaseSettings):
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",
-        "case_sensitive": True,
-        "extra": "ignore"  # Changed from "forbid" to "ignore" for cloud deployments
+        "env_ignore_empty": True,
+        "case_sensitive": False,  # Changed to False for better compatibility
+        "extra": "ignore",  # Changed from "forbid" to "ignore" for cloud deployments
+        "validate_default": True
     }
 
     @field_validator("API_ID", mode="before")

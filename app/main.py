@@ -62,6 +62,10 @@ class BotManager:
 
     async def _initialize_background_tasks(self):
         """Initialize background tasks"""
+        # Start health check server for Koyeb
+        from health_server import start_health_server
+        asyncio.create_task(start_health_server(8000))
+
         # Start cleanup tasks
         asyncio.create_task(self._cleanup_task())
         asyncio.create_task(self._stats_update_task())

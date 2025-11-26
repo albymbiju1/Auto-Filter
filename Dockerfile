@@ -37,6 +37,9 @@ COPY . .
 # Create logs directory
 RUN mkdir -p logs
 
+# Make start script executable
+RUN chmod +x start.sh test_env.py
+
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app && \
     chown -R app:app /app
@@ -50,4 +53,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import asyncio; from services.database_service import DatabaseService; asyncio.run(DatabaseService().health_check())" || exit 1
 
 # Default command
-CMD ["python", "-m", "app.main"]
+CMD ["./start.sh"]
