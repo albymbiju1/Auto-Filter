@@ -6,9 +6,11 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 import logging
 
+from app.bot import bot
+
 logger = logging.getLogger(__name__)
 
-@Client.on_message(filters.command("test") & filters.private)
+@bot.on_message(filters.command("test") & filters.private)
 async def test_handler(client: Client, message: Message):
     """Test command to verify handlers are working"""
     logger.info(f"Test command received from {message.from_user.id}")
