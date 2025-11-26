@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: cineai-bot
+    environment:
+      # Telegram Configuration
+      - BOT_TOKEN=${BOT_TOKEN}
+      - API_ID=${API_ID}
+      - API_HASH=${API_HASH}
+
+      # Database Configuration
+      - MONGO_URI=mongodb://mongo:27017/cineai_bot
+
+      # Admin Configuration
+      - ADMIN_USER_IDS=${ADMIN_USER_IDS}
+      - SUPER_ADMIN_ID=${SUPER_ADMIN_ID}
+
+      # Feature Toggles
+      - FEATURE_TOGGLES=${FEATURE_TOGGLES}
+
+      # External APIs
+      - IMDB_API_KEY=${IMDB_API_KEY}
+      - SHORTENER_API_KEY=${SHORTENER_API_KEY}
+
+      # Payment Configuration
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET}
+
+      # Bot Settings
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - FILE_DELETE_TTL=${FILE_DELETE_TTL:-86400}
+      - MAX_FILE_SIZE_MB=${MAX_FILE_SIZE_MB:-2000}
+      - BROADCAST_CHUNK_SIZE=${BROADCAST_CHUNK_SIZE:-50}
+      - RATE_LIMIT_PER_USER=${RATE_LIMIT_PER_USER:-30}
+      - CACHE_TTL=${CACHE_TTL:-3600}
+
+      # Force Subscribe Settings
+      - FORCE_SUBSCRIBE_CHANNELS=${FORCE_SUBSCRIBE_CHANNELS}
+      - AUTO_APPROVE_JOINS=${AUTO_APPROVE_JOINS:-true}
+      - CUSTOM_WELCOME_MESSAGE=${CUSTOM_WELCOME_MESSAGE:-Welcome to CineAI Bot! 🎬}
+      - CUSTOM_START_MESSAGE=${CUSTOM_START_MESSAGE:-Hello! I'm your personal movie assistant. 🍿}
+      - CUSTOM_TUTORIAL_BUTTON=${CUSTOM_TUTORIAL_BUTTON:-How to use me?}
+
+    depends_on:
+      - mongo
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - cineai-network
+
+  mongo:
+    image: mongo:7
+    container_name: cineai-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-password}
+      - MONGO_INITDB_DATABASE=cineai_bot
+    volumes:
+      - mongo_data:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks:
+      - cineai-network
+
+
+  nginx:
+    image: nginx:alpine
+    container_name: cineai-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - bot
+    restart: unless-stopped
+    networks:
+      - cineai-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: cineai-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    networks:
+      - cineai-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: cineai-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - cineai-network
+
+volumes:
+  mongo_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  cineai-network:
+    driver: bridge

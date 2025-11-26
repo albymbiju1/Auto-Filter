@@ -1,0 +1,54 @@
+# Core Telegram Bot
+pyrogram>=2.0.106
+tgcrypto>=1.2.5
+
+# Database Support
+motor>=3.3.2
+sqlalchemy[asyncio]>=2.0.23
+asyncpg>=0.29.0
+alembic>=1.12.1
+
+# Caching & Background Tasks
+redis>=5.0.1
+rq>=1.15.1
+celery>=5.3.4
+
+# Environment & Configuration
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# HTTP & API
+httpx>=0.25.2
+aiohttp>=3.9.1
+requests>=2.31.0
+
+# Image Processing & Media
+Pillow>=10.1.0
+python-magic>=0.4.27
+ffmpeg-python>=0.2.0
+
+# Utilities
+python-dateutil>=2.8.2
+pytz>=2023.3
+shortuuid>=1.0.11
+fuzzywuzzy>=0.18.0
+python-levenshtein>=0.23.0
+
+# Development & Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+black>=23.11.0
+flake8>=6.1.0
+
+# Production & Monitoring
+sentry-sdk>=1.38.0
+prometheus-client>=0.19.0
+
+# Payment Integration (placeholders)
+stripe>=7.5.0
+
+# Optional: Additional AI/ML features
+# transformers>=4.36.0
+# torch>=2.1.0
+# sentence-transformers>=2.2.2
