@@ -20,14 +20,6 @@ from pyrogram.enums import ParseMode
 logger = setup_logging()
 logger.info("Starting Movie Bazar Bot...")
 
-# Import handlers to register them with the bot
-import handlers.start
-import handlers.commands
-import handlers.inline
-import handlers.channel_listener
-import handlers.test
-logger.info("Handlers imported and registered")
-
 
 class BotManager:
     """Manages bot lifecycle and services"""
@@ -88,6 +80,15 @@ class BotManager:
         try:
             # Initialize services first
             await self.initialize()
+
+            # Import handlers BEFORE starting the bot so they can register
+            logger.info("Loading handlers...")
+            import handlers.start
+            import handlers.commands
+            import handlers.inline
+            import handlers.channel_listener
+            import handlers.test
+            logger.info("Handlers loaded successfully")
 
             # Start the bot
             me = await movie_bazar_bot.start()
