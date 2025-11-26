@@ -11,12 +11,11 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.enums import ParseMode
 
 from app.config import config
-from app.bot import bot
 
 logger = logging.getLogger(__name__)
 
 
-@bot.on_message(filters.command("start") & filters.private)
+@Client.on_message(filters.command("start") & filters.private)
 async def start_command(client: Client, message: Message):
     """Handle /start command"""
     user_id = message.from_user.id
@@ -268,7 +267,7 @@ async def grant_referral_premium(client: Client, referrer_id: int):
         logger.error(f"Error granting referral premium: {e}")
 
 
-@bot.on_callback_query(filters.regex("^retry_start$"))
+@Client.on_callback_query(filters.regex("^retry_start$"))
 async def retry_start_callback(client: Client, callback_query):
     """Handle retry start callback"""
     user_id = callback_query.from_user.id
@@ -284,7 +283,7 @@ async def retry_start_callback(client: Client, callback_query):
         await callback_query.answer("❌ Error occurred. Please try again.", show_alert=True)
 
 
-@bot.on_callback_query(filters.regex("^browse_files$"))
+@Client.on_callback_query(filters.regex("^browse_files$"))
 async def browse_files_callback(client: Client, callback_query):
     """Handle browse files callback"""
     user_id = callback_query.from_user.id
@@ -379,7 +378,7 @@ async def send_file_list(client: Client, message, result, user_id):
         raise
 
 
-@bot.on_callback_query(filters.regex("^browse_page_(\\d+)$"))
+@Client.on_callback_query(filters.regex("^browse_page_(\\d+)$"))
 async def browse_page_callback(client: Client, callback_query):
     """Handle browse pagination"""
     user_id = callback_query.from_user.id
