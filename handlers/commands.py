@@ -51,6 +51,7 @@ async def search_command(client: Client, message: Message):
         # Get search query
         query = message.text.split("/search", 1)[1].strip()
         if not query:
+            bot_info = await client.get_me()
             await message.reply_text(
                 "🔍 **Search Usage:**\n\n"
                 "`/search <movie name>`\n\n"
@@ -59,7 +60,7 @@ async def search_command(client: Client, message: Message):
                 "• `/search Avengers 2019`\n"
                 "• `/search Game of Thrones S01E01`\n\n"
                 "You can also use inline search:\n"
-                f"@{bot.me.username} <movie name>",
+                f"@{bot_info.username} <movie name>",
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup([
                     [InlineKeyboardButton(
@@ -308,7 +309,8 @@ def build_help_text() -> str:
         help_text += "• `/search <query>` - Search in private chat\n"
 
     if config.features.INLINE_SEARCH:
-        help_text += f"• Inline: `@{bot.me.username} <query>` - Search inline\n"
+        bot_info = await client.get_me()
+        help_text += f"• Inline: `@{bot_info.username} <query>` - Search inline\n"
 
     # Feature commands
     if config.features.PREMIUM:
@@ -485,8 +487,9 @@ async def profile_command(client: Client, message: Message):
         # Referral info
         if config.features.REFERRAL:
             if user.referral_code:
+                bot_info = await client.get_me()
                 profile_text += f"\n👥 **Referral Code:** `{user.referral_code}`\n"
-                profile_text += f"🔗 **Referral Link:** https://t.me/{bot.me.username}?start={user.referral_code}\n"
+                profile_text += f"🔗 **Referral Link:** https://t.me/{bot_info.username}?start={user.referral_code}\n"
                 profile_text += f"📊 **Referrals:** {user.referral_count}\n"
 
         # Verification status

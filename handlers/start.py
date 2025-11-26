@@ -103,9 +103,10 @@ async def send_welcome_message(
         welcome_text += features_text
 
         # Add help text
+        bot_info = await client.get_me()
         welcome_text += f"\n\n💡 **How to use:**\n"
         welcome_text += f"• Type `/search <movie>` to search\n"
-        welcome_text += f"• Use inline mode: `@{bot.me.username} movie`\n"
+        welcome_text += f"• Use inline mode: `@{bot_info.username} movie`\n"
         welcome_text += f"• Type `/help` for more commands"
 
         # Build keyboard

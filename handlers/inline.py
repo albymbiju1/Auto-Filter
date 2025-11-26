@@ -494,8 +494,8 @@ def create_file_caption(file):
     if file.description:
         caption_parts.append(f"\n📝 {file.description}")
 
-    # Footer
-    caption_parts.append(f"\n\n_Requested via @{bot.me.username}_")
+    # Footer (removed bot username reference as it's not available here)
+    # caption_parts.append(f"\n\n_Requested via inline search_")
 
     return "\n".join(caption_parts)
 
